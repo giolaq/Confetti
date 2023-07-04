@@ -1,5 +1,12 @@
+@file:OptIn(ExperimentalTvMaterial3Api::class)
+
 package dev.johnoreilly.confetti.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -8,7 +15,8 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -18,81 +26,75 @@ import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationRail
-import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.tv.material3.DrawerValue
+import androidx.tv.material3.ExperimentalTvMaterial3Api
+import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.NavigationDrawer
+import androidx.tv.material3.Text
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
-import dev.johnoreilly.confetti.decompose.HomeComponent
 import dev.johnoreilly.confetti.R
 import dev.johnoreilly.confetti.account.AccountIcon
 import dev.johnoreilly.confetti.account.AccountInfo
 import dev.johnoreilly.confetti.account.WearUiState
 import dev.johnoreilly.confetti.bookmarks.BookmarksRoute
+import dev.johnoreilly.confetti.decompose.HomeComponent
 import dev.johnoreilly.confetti.search.SearchRoute
 import dev.johnoreilly.confetti.sessions.SessionsRoute
 import dev.johnoreilly.confetti.speakers.SpeakersRoute
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeRoute(
     component: HomeComponent,
     windowSizeClass: WindowSizeClass,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val shouldShowNavRail = windowSizeClass.isExpanded
 
-    Row {
-        if (shouldShowNavRail) {
-            NavigationRail(component = component)
-        }
-
-        Scaffold(
-            modifier = Modifier.imePadding(),
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxHeight(),
-            ) {
-                Children(
-                    component = component,
-                    windowSizeClass = windowSizeClass,
-                    snackbarHostState = snackbarHostState,
+    NavigationDrawer(
+        component = component,
+        content = {
+            Scaffold(
+                modifier = Modifier.imePadding(),
+                snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+                contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            ) { innerPadding ->
+                Column(
                     modifier = Modifier
-                        .weight(1f)
-                        .then(Modifier.consumeWindowInsets(NavigationBarDefaults.windowInsets)),
-                )
-
-                if (!shouldShowNavRail) {
-                    BottomBar(component = component)
+                        .padding(innerPadding)
+                        .fillMaxHeight(),
+                ) {
+                    Children(
+                        component = component,
+                        windowSizeClass = windowSizeClass,
+                        snackbarHostState = snackbarHostState,
+                        modifier = Modifier
+                            .weight(1f)
+                            .then(Modifier.consumeWindowInsets(NavigationBarDefaults.windowInsets)),
+                    )
                 }
             }
         }
-    }
+    )
 }
 
 @Composable
@@ -157,56 +159,56 @@ private fun Children(
 }
 
 @Composable
-private fun BottomBar(component: HomeComponent) {
-    Column {
-        Divider()
-        NavigationBar(
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            tonalElevation = 0.dp,
-        ) {
-            NavigationButtons(component = component) { isSelected, selectedIcon, unselectedIcon, textId, onClick ->
-                NavigationBarItem(
-                    selected = isSelected,
-                    onClick = onClick,
-                    icon = {
+private fun NavigationDrawer(component: HomeComponent, content: @Composable () -> Unit) {
+    NavigationDrawer(
+        drawerContent = {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .fillMaxHeight()
+            ) {
+                NavigationButtons(
+                    drawerValue = it,
+                    component = component
+                ) { drawerValue, isSelected, selectedIcon, unselectedIcon, textId, onClick ->
+                    Row(
+                        modifier = Modifier
+                            .focusable()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Icon(
                             imageVector = if (isSelected) selectedIcon else unselectedIcon,
                             contentDescription = stringResource(textId),
                         )
-                    },
-                    label = { Text(stringResource(textId)) },
-                )
+                        AnimatedVisibility(visible = drawerValue == DrawerValue.Open) {
+                            Text(
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                                text = stringResource(textId),
+                                softWrap = false,
+                                style = MaterialTheme.typography.bodySmall
+                                    .copy(
+                                        color = MaterialTheme.colorScheme.onPrimary
+                                    ),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
             }
         }
-    }
-}
-
-@Composable //GLAQ
-private fun NavigationRail(component: HomeComponent) {
-    NavigationRail(
-        modifier = Modifier.safeDrawingPadding(),
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
     ) {
-        NavigationButtons(component = component) { isSelected, selectedIcon, unselectedIcon, textId, onClick ->
-            NavigationRailItem(
-                selected = isSelected,
-                onClick = onClick,
-                icon = {
-                    Icon(
-                        imageVector = if (isSelected) selectedIcon else unselectedIcon,
-                        contentDescription = stringResource(textId),
-                    )
-                },
-            )
-        }
+        content()
     }
 }
 
 @Composable
 private fun <T> T.NavigationButtons(
     component: HomeComponent,
+    drawerValue: DrawerValue,
     content: @Composable T.(
+        drawerValue: DrawerValue,
         isSelected: Boolean,
         selectedIcon: ImageVector,
         unselectedIcon: ImageVector,
@@ -218,6 +220,7 @@ private fun <T> T.NavigationButtons(
     val activeChild = stack.active.instance
 
     content(
+        drawerValue = drawerValue,
         isSelected = activeChild is HomeComponent.Child.Sessions,
         selectedIcon = Icons.Filled.CalendarMonth,
         unselectedIcon = Icons.Outlined.CalendarMonth,
@@ -226,6 +229,7 @@ private fun <T> T.NavigationButtons(
     )
 
     content(
+        drawerValue = drawerValue,
         isSelected = activeChild is HomeComponent.Child.Speakers,
         selectedIcon = Icons.Filled.Person,
         unselectedIcon = Icons.Outlined.Person,
@@ -234,6 +238,7 @@ private fun <T> T.NavigationButtons(
     )
 
     content(
+        drawerValue = drawerValue,
         isSelected = activeChild is HomeComponent.Child.Bookmarks,
         selectedIcon = Icons.Filled.Bookmarks,
         unselectedIcon = Icons.Outlined.Bookmarks,
@@ -242,6 +247,7 @@ private fun <T> T.NavigationButtons(
     )
 
     content(
+        drawerValue = drawerValue,
         isSelected = activeChild is HomeComponent.Child.Search,
         selectedIcon = Icons.Filled.Search,
         unselectedIcon = Icons.Outlined.Search,
