@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmarks
@@ -26,7 +28,6 @@ import androidx.compose.material.icons.outlined.Bookmarks
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -37,17 +38,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.DrawerValue
 import androidx.tv.material3.ExperimentalTvMaterial3Api
+import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.NavigationDrawer
+import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.animation.fade
@@ -172,34 +173,47 @@ private fun NavigationDrawer(component: HomeComponent, content: @Composable () -
                     drawerValue = it,
                     component = component
                 ) { drawerValue, isSelected, selectedIcon, unselectedIcon, textId, onClick ->
-                    Row(
-                        modifier = Modifier
-                            .focusable()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = if (isSelected) selectedIcon else unselectedIcon,
-                            contentDescription = stringResource(textId),
-                        )
-                        AnimatedVisibility(visible = drawerValue == DrawerValue.Open) {
-                            Text(
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                                text = stringResource(textId),
-                                softWrap = false,
-                                style = MaterialTheme.typography.bodySmall
-                                    .copy(
-                                        color = MaterialTheme.colorScheme.onPrimary
-                                    ),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
+                    NavigationButton(isSelected, selectedIcon, unselectedIcon, textId, drawerValue, onClick)
                 }
             }
         }
     ) {
         content()
+    }
+}
+
+@Composable
+private fun NavigationButton(
+    isSelected: Boolean,
+    selectedIcon: ImageVector,
+    unselectedIcon: ImageVector,
+    textId: Int,
+    drawerValue: DrawerValue,
+    onClick: () -> Unit
+) {
+    Surface(
+        onClick = onClick,
+        modifier = Modifier.padding(start = 12.dp, top = 12.dp, end = 12.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .focusable(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = if (isSelected) selectedIcon else unselectedIcon,
+                contentDescription = stringResource(textId),
+                modifier = Modifier.padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
+            )
+            AnimatedVisibility(visible = drawerValue == DrawerValue.Open) {
+                Text(
+                    text = stringResource(textId),
+                    modifier = Modifier.padding(end = 16.dp).width(80.dp),
+                    softWrap = false,
+                    textAlign = TextAlign.Start
+                )
+            }
+        }
     }
 }
 
