@@ -4,6 +4,7 @@ package dev.johnoreilly.confetti.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -47,6 +49,7 @@ import androidx.tv.material3.DrawerValue
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.ModalNavigationDrawer
 import androidx.tv.material3.NavigationDrawer
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
@@ -192,12 +195,11 @@ private fun NavigationButton(
     onClick: () -> Unit
 ) {
     Surface(
-        onClick = onClick,
-        modifier = Modifier.padding(start = 12.dp, top = 12.dp, end = 12.dp)
+        onClick =  { onClick() },
+        modifier = Modifier
+            .padding(start = 12.dp, top = 12.dp, end = 12.dp)
     ) {
         Row(
-            modifier = Modifier
-                .focusable(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -208,7 +210,9 @@ private fun NavigationButton(
             AnimatedVisibility(visible = drawerValue == DrawerValue.Open) {
                 Text(
                     text = stringResource(textId),
-                    modifier = Modifier.padding(end = 16.dp).width(80.dp),
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .width(100.dp),
                     softWrap = false,
                     textAlign = TextAlign.Start
                 )

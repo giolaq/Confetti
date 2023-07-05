@@ -76,7 +76,7 @@ fun BackgroundDefault() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark theme")
 @Composable
 fun BackgroundDynamic() {
-    ConfettiTheme(disableDynamicTheming = false) {
+    ConfettiTheme() {
         ConfettiBackground(Modifier.size(100.dp), content = {})
     }
 }

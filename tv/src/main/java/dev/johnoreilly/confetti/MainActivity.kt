@@ -59,8 +59,7 @@ class MainActivity : ComponentActivity() {
 
             ConfettiTheme(
                 darkTheme = shouldUseDarkTheme(userEditableSettings?.darkThemeConfig),
-                androidTheme = shouldUseAndroidTheme(userEditableSettings?.brand),
-                disableDynamicTheming = shouldDisableDynamicTheming(userEditableSettings?.useDynamicColor)
+                androidTheme = shouldUseAndroidTheme(userEditableSettings?.brand)
             ) {
                 ConfettiBackground {
                     ConfettiApp(

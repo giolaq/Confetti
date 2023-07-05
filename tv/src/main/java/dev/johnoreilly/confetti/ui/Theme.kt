@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTvMaterial3Api::class)
+
 package dev.johnoreilly.confetti.ui
 
 import android.content.Context
@@ -5,17 +7,17 @@ import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.tv.material3.ColorScheme
+import androidx.tv.material3.ExperimentalTvMaterial3Api
+import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.darkColorScheme
+import androidx.tv.material3.lightColorScheme
 import dev.johnoreilly.confetti.ui.component.BackgroundTheme
 import dev.johnoreilly.confetti.ui.component.LocalBackgroundTheme
 
@@ -46,8 +48,7 @@ val LightDefaultColorScheme = lightColorScheme(
     surface = DarkPurpleGray99,
     onSurface = DarkPurpleGray10,
     surfaceVariant = PurpleGray90,
-    onSurfaceVariant = PurpleGray30,
-    outline = PurpleGray50
+    onSurfaceVariant = PurpleGray30
 )
 
 /**
@@ -76,8 +77,7 @@ val DarkDefaultColorScheme = darkColorScheme(
     surface = DarkPurpleGray10,
     onSurface = DarkPurpleGray90,
     surfaceVariant = PurpleGray30,
-    onSurfaceVariant = PurpleGray80,
-    outline = PurpleGray60
+    onSurfaceVariant = PurpleGray80
 )
 
 /**
@@ -106,8 +106,7 @@ val LightAndroidColorScheme = lightColorScheme(
     surface = DarkGreenGray99,
     onSurface = DarkGreenGray10,
     surfaceVariant = GreenGray90,
-    onSurfaceVariant = GreenGray30,
-    outline = GreenGray50
+    onSurfaceVariant = GreenGray30
 )
 
 /**
@@ -136,8 +135,7 @@ val DarkAndroidColorScheme = darkColorScheme(
     surface = DarkGreenGray10,
     onSurface = DarkGreenGray90,
     surfaceVariant = GreenGray30,
-    onSurfaceVariant = GreenGray80,
-    outline = GreenGray60
+    onSurfaceVariant = GreenGray80
 )
 
 
@@ -166,12 +164,11 @@ val DarkAndroidBackgroundTheme = BackgroundTheme(color = Color.Black)
 fun ConfettiTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     androidTheme: Boolean = false,
-    disableDynamicTheming: Boolean = false,
     content: @Composable () -> Unit
 ) {
     SystemBarsColorEffect(isSystemInDarkTheme = darkTheme)
 
-    val (colorScheme, backgroundTheme) = mobileThemes(androidTheme, darkTheme, disableDynamicTheming)
+    val (colorScheme, backgroundTheme) = mobileThemes(androidTheme, darkTheme)
 
     CompositionLocalProvider(
         LocalBackgroundTheme provides backgroundTheme
@@ -188,10 +185,8 @@ fun ConfettiTheme(
 fun mobileThemes(
     androidTheme: Boolean,
     darkTheme: Boolean,
-    disableDynamicTheming: Boolean
 ): Pair<ColorScheme, BackgroundTheme> {
-    val context = LocalContext.current
-    val colorScheme = colorScheme(androidTheme, darkTheme, disableDynamicTheming, context)
+    val colorScheme = colorScheme(androidTheme, darkTheme)
 
     val defaultBackgroundTheme = BackgroundTheme(
         color = colorScheme.surface,
@@ -207,14 +202,10 @@ fun mobileThemes(
 
 fun colorScheme(
     androidTheme: Boolean,
-    darkTheme: Boolean,
-    disableDynamicTheming: Boolean,
-    context: Context
+    darkTheme: Boolean
 ): ColorScheme {
     val colorScheme = if (androidTheme) {
         if (darkTheme) DarkAndroidColorScheme else LightAndroidColorScheme
-    } else if (!disableDynamicTheming && supportsDynamicTheming()) {
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     } else {
         if (darkTheme) DarkDefaultColorScheme else LightDefaultColorScheme
     }
