@@ -137,7 +137,6 @@ class DefaultSettingsComponent(
         }
     }
 
-
     override fun enableDeveloperMode() {
         coroutineScope.launch {
             appSettings.setDeveloperMode(true)
