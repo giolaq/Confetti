@@ -58,8 +58,8 @@ class MainActivity : ComponentActivity() {
             val displayFeatures = calculateDisplayFeatures(this)
 
             ConfettiTheme(
-                darkTheme = shouldUseDarkTheme(userEditableSettings?.darkThemeConfig),
-                androidTheme = shouldUseAndroidTheme(userEditableSettings?.brand)
+                darkTheme = true, //Force dark theme for now shouldUseDarkTheme(userEditableSettings?.darkThemeConfig),
+                androidTheme = false // shouldUseAndroidTheme(userEditableSettings?.brand)
             ) {
                 ConfettiBackground {
                     ConfettiApp(

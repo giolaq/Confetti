@@ -197,7 +197,8 @@ fun mobileThemes(
     } else {
         defaultBackgroundTheme
     }
-    return Pair(colorScheme, backgroundTheme)
+   // return Pair(colorScheme, backgroundTheme) Force Dark Theme
+    return Pair(DarkAndroidColorScheme, DarkAndroidBackgroundTheme)
 }
 
 fun colorScheme(

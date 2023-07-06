@@ -32,6 +32,7 @@ fun HomeScaffold(
         if (windowSizeClass.isExpanded) 40.sp else MaterialTheme.typography.titleLarge.fontSize
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {

@@ -63,12 +63,7 @@ fun SpeakersRoute(
         topBarActions = topBarActions,
     ) {
         when (val uiState1 = uiState) {
-            is SpeakersUiState.Success -> {
-                if (windowSizeClass.isExpanded) {
-                    SpeakerGridView(uiState1.speakers, component::onSpeakerClicked)
-                }
-            }
-
+            is SpeakersUiState.Success -> SpeakerGridView(uiState1.speakers, component::onSpeakerClicked)
             is SpeakersUiState.Loading -> LoadingView()
             is SpeakersUiState.Error -> ErrorView {
 
@@ -85,7 +80,9 @@ fun SpeakerGridView(
     val speakerGridState = rememberTvLazyGridState()
     TvLazyVerticalGrid(
         state = speakerGridState,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 12.dp),
         columns = TvGridCells.Fixed(6),
         content = {
             speakers.forEachIndexed { index, speakerDetails ->
@@ -122,7 +119,9 @@ fun SpeakerGridView(
                                                 modifier = Modifier.fillMaxSize()
                                             )
                                             Text(
-                                                modifier = Modifier.padding(16.dp).align(Alignment.BottomStart),
+                                                modifier = Modifier
+                                                    .padding(16.dp)
+                                                    .align(Alignment.BottomStart),
                                                 text = speakerDetails.name,
                                                 style = MaterialTheme.typography.bodySmall
                                                     .copy(
