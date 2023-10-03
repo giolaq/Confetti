@@ -58,6 +58,7 @@ include(":landing-page")
 include(":wearApp")
 include(":wearBenchmark")
 include(":compose-desktop")
+include(":tvApp")
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     "This project needs to be run with Java 17 or higher (found: ${JavaVersion.current()})."
