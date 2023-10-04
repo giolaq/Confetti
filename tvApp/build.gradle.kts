@@ -159,4 +159,38 @@ dependencies {
     implementation(libs.androidx.tv.foundation)
     implementation(libs.androidx.tv.material)
 
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling)
+    implementation(libs.compose.material)
+    implementation(libs.compose.material.icons.extended)
+    implementation(libs.coil.compose)
+
+    implementation(libs.decompose.decompose)
+    implementation(libs.decompose.extensions.compose.jetpack)
+
+    implementation(libs.activity.compose)
+    implementation(libs.lifecycle.runtime.compose)
+    implementation(libs.material3.core)
+    implementation(libs.material3.window.size)
+    implementation(libs.splash.screen)
+
+    implementation(libs.accompanist.adaptive)
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+    implementation(libs.androidx.work.runtime.ktx)
+
+    implementation(libs.kmm.viewmodel)
+
+
+    coreLibraryDesugaring(libs.desugar)
+
+    testImplementation(libs.snapshot.android)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.compose.ui.test.junit4)
+    testImplementation(libs.koin.test)
+    debugImplementation(libs.compose.ui.manifest)
 }
